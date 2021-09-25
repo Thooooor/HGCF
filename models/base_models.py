@@ -116,10 +116,10 @@ class HGCFModel(nn.Module):
         sampled_false_edges_list = [triples[:, [0, 2 + i]] for i in range(self.args.num_neg)]
         pos_scores = self.decode(embeddings, train_edges)
 
-        neg_scores_list = [self.decode(embeddings, sampled_false_edges) for sampled_false_edges in
-                           sampled_false_edges_list]
-        neg_scores = torch.cat(neg_scores_list, dim=1)
-        # neg_scores = self.compute_neg_distance(embeddings, sampled_false_edges_list, train_edges, epoch, cu_learn=True)
+        # neg_scores_list = [self.decode(embeddings, sampled_false_edges) for sampled_false_edges in
+        #                    sampled_false_edges_list]
+        # neg_scores = torch.cat(neg_scores_list, dim=1)
+        neg_scores = self.compute_neg_distance(embeddings, sampled_false_edges_list, train_edges, epoch, cu_learn=True)
 
         loss = pos_scores - neg_scores + self.margin
         loss[loss < 0] = 0
